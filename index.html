@@ -2,22 +2,31 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>Solar System Visualizer</title>
+		<title>3D Solar System Visualizer</title>
 		<link rel="stylesheet" href="./src/style.css">
 	</head>
 	<body>
-		<div class="tabs">
-			<div class="tab" onclick="onTabClick('Mercury')">Mercury</div>
-			<div class="tab" onclick="panToPlanet('venus')">Venus</div>
-			<div class="tab" onclick="panToPlanet('earth')">Earth</div>
-			<div class="tab" onclick="panToPlanet('mars')">Mars</div>
-			<div class="tab" onclick="panToPlanet('jupiter')">Jupiter</div>
-			<div class="tab" onclick="panToPlanet('saturn')">Saturn</div>
-			<div class="tab" onclick="panToPlanet('uranus')">Uranus</div>
-			<div class="tab" onclick="panToPlanet('neptune')">Neptune</div>
+		<h1 class="title">Solar System</h1>
+		
+		<div class="nav-container">
+			<button id="toggleNav" class="toggle-nav">☰ Planets</button>
+			<nav class="planet-nav">
+				<button class="nav-item" onclick="event.stopPropagation(); panToPlanet('mercury')">Mercury</button>
+				<button class="nav-item" onclick="event.stopPropagation(); panToPlanet('venus')">Venus</button>
+				<button class="nav-item" onclick="event.stopPropagation(); panToPlanet('earth')">Earth</button>
+				<button class="nav-item" onclick="event.stopPropagation(); panToPlanet('mars')">Mars</button>
+				<button class="nav-item" onclick="event.stopPropagation(); panToPlanet('jupiter')">Jupiter</button>
+				<button class="nav-item" onclick="event.stopPropagation(); panToPlanet('saturn')">Saturn</button>
+				<button class="nav-item" onclick="event.stopPropagation(); panToPlanet('uranus')">Uranus</button>
+				<button class="nav-item" onclick="event.stopPropagation(); panToPlanet('neptune')">Neptune</button>
+				<button class="nav-item" onclick="resetView()">Reset View</button>
+			</nav>
 		</div>
+
+		<div class="loading"></div>
+		
 		<div class="planet-container">
-			<div class="planet" id="planet-display" style="background-image: url('https://via.placeholder.com/500');"></div>
+			<div class="planet" id="planet-display"></div>
 		</div>
     <canvas class="threejs"></canvas>
 		<script type="module" src="./src/main.js"></script>
