@@ -2,10 +2,23 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>My first three.js app</title>
+		<title>Solar System Visualizer</title>
 		<link rel="stylesheet" href="./src/style.css">
 	</head>
 	<body>
+		<div class="tabs">
+			<div class="tab" onclick="onTabClick('Mercury')">Mercury</div>
+			<div class="tab" onclick="panToPlanet('venus')">Venus</div>
+			<div class="tab" onclick="panToPlanet('earth')">Earth</div>
+			<div class="tab" onclick="panToPlanet('mars')">Mars</div>
+			<div class="tab" onclick="panToPlanet('jupiter')">Jupiter</div>
+			<div class="tab" onclick="panToPlanet('saturn')">Saturn</div>
+			<div class="tab" onclick="panToPlanet('uranus')">Uranus</div>
+			<div class="tab" onclick="panToPlanet('neptune')">Neptune</div>
+		</div>
+		<div class="planet-container">
+			<div class="planet" id="planet-display" style="background-image: url('https://via.placeholder.com/500');"></div>
+		</div>
     <canvas class="threejs"></canvas>
 		<script type="module" src="./src/main.js"></script>
 	</body>

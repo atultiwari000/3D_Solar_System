@@ -1,4 +1,39 @@
+
 body {
+  font-family: Arial, sans-serif;
+  text-align: center;
   margin: 0;
   overflow: hidden;
+}
+.tabs {
+  display: flex;
+  justify-content: space-between;
+  /* gap: 10px; */
+  margin: 20px 20px 20px 20 ;
+}
+.tab {
+  padding: 10px 15px;
+  background-color: lightgray;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.tab:hover {
+  background-color: gray;
+  color: white;
+}
+.planet-container {
+  width: 500px;
+  height: 5px;
+  overflow: hidden;
+  position: relative;
+  margin: auto;
+  opacity:0;
+}
+.planet {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.5s ease-in-out;
 }

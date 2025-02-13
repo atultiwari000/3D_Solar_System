@@ -25,6 +25,12 @@ const marsTexture = textureLoader.load("/textures/2k_mars.jpg");
 marsTexture.colorSpace = THREE.SRGBColorSpace
 const moonTexture = textureLoader.load("/textures/2k_moon.jpg");
 moonTexture.colorSpace = THREE.SRGBColorSpace
+const jupiterTexture = textureLoader.load("/textures/8k_jupiter.jpg");
+jupiterTexture.colorSpace = THREE.SRGBColorSpace
+const saturnTexture = textureLoader.load("/textures/saturn.jpg");
+saturnTexture.colorSpace = THREE.SRGBColorSpace
+const ringTexture = textureLoader.load("/textures/ring.jpg");
+ringTexture.colorSpace = THREE.SRGBColorSpace
 
 
 const backgroundCubemap = cubeTextureLoader
@@ -55,6 +61,13 @@ const marsMaterial = new THREE.MeshStandardMaterial({
 const moonMaterial = new THREE.MeshStandardMaterial({
   map: moonTexture,
 });
+const jupiterMaterial = new THREE.MeshStandardMaterial({
+  map: jupiterTexture,
+});
+const saturnMaterial = new THREE.MeshStandardMaterial({
+  map: saturnTexture,
+});
+
 
 // add stuff here
 const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
@@ -62,8 +75,20 @@ const sunMaterial = new THREE.MeshBasicMaterial({
   map: sunTexture,
 });
 
+const ringGeometry = new THREE.RingGeometry(2, 4, 64);
+const ringMaterial = new THREE.MeshStandardMaterial({
+  map: saturnTexture,
+  side: THREE.DoubleSide,
+  transparent: true,
+  opacity: 0.5,
+});
+
+const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+ring.rotation.x = Math.PI / 2;
+ring.position.y = 0;
+
 const sun = new THREE.Mesh(sphereGeometry, sunMaterial);
-sun.scale.setScalar(5);
+sun.scale.setScalar(7);
 scene.add(sun);
 
 const planets = [
@@ -123,6 +148,22 @@ const planets = [
       },
     ],
   },
+  {
+    name: "Jupiter",
+    radius: 4,
+    distance: 30,
+    speed: 0.001,
+    material: jupiterMaterial,
+    moons: [],
+  },
+  {
+    name: "Saturn",
+    radius: 4,
+    distance: 40,
+    speed: 0.001,
+    material: saturnMaterial,
+    moons: [],
+  }
 ];
 
 const createPlanet = (planet) => {
@@ -147,8 +188,10 @@ const planetMeshes = planets.map((planet) => {
     const moonMesh = createMoon(moon);
     planetMesh.add(moonMesh);
   });
+
   return planetMesh;
 });
+
 
 // add lights
 const ambientLight = new THREE.AmbientLight(
@@ -186,11 +229,72 @@ controls.enableDamping = true;
 controls.maxDistance = 200;
 controls.minDistance = 20;
 
+
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+let selectedPlanet = null;
+
+// Store the initial camera position and target
+const initialCameraPosition = camera.position.clone();
+const initialTarget = controls.target.clone();
+
+function focusOnPlanet(planet) {
+  selectedPlanet = planet;
+}
+
+function onTabClick(planetName) {
+  const planet = planets.find(p => p.name === planetName);
+  
+  if (planet) {
+    focusOnPlanet(planet);
+  }
+}
+
+
+
+window.addEventListener('click', (event) => {
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+  raycaster.setFromCamera(mouse, camera);
+
+  const intersects = raycaster.intersectObjects(planetMeshes, true);
+
+  if (intersects.length > 0) {
+    selectedPlanet = intersects[0].object;
+  } else {
+    selectedPlanet = null;
+    controls.target.set(0, 0, 0);  
+    controls.enableDamping = true;  
+  }
+});
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  if (selectedPlanet) {
+    const offset = new THREE.Vector3(0, 5, 10);
+    const planetPosition = selectedPlanet.getWorldPosition(new THREE.Vector3());
+    const cameraPosition = planetPosition.clone().add(offset);
+
+    camera.position.lerp(cameraPosition, 0.1);
+    controls.target.lerp(planetPosition, 0.1);
+  } else {
+    controls.target.lerp(initialTarget, 0.05);
+  }
+
+  controls.update();
+  renderer.render(scene, camera);
+}
+
+animate();
+
 window.addEventListener("resize", () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
+
 
 const renderloop = () => {
   planetMeshes.forEach((planet, planetIndex)=>{
@@ -203,10 +307,10 @@ const renderloop = () => {
       moon.position.z = Math.cos(moon.rotation.y) * planets[planetIndex].moons[moonIndex].distance
     })
   })
-
   controls.update();
   renderer.render(scene, camera);
   window.requestAnimationFrame(renderloop);
 };
+
 
 renderloop();
