@@ -12,7 +12,7 @@ const cubeTextureLoader = new THREE.CubeTextureLoader();
 cubeTextureLoader.setPath('/textures/cubemap/');
 
 // Load textures first
-const mercuryTexture = textureLoader.load("/textures/2k_mercury.jpg");
+const mercuryTexture = textureLoader.load("./textures/2k_mercury.jpg");
 mercuryTexture.colorSpace = THREE.SRGBColorSpace;
 const venusTexture = textureLoader.load("/textures/2k_venus_surface.jpg");
 venusTexture.colorSpace = THREE.SRGBColorSpace;
@@ -46,9 +46,12 @@ const sunTexture = textureLoader.load("/textures/2k_sun.jpg");
 sunTexture.colorSpace = THREE.SRGBColorSpace;
 const sunMaterial = new THREE.MeshBasicMaterial({ map: sunTexture });
 const sun = new THREE.Mesh(sphereGeometry, sunMaterial);
+sun.position.set(0, 0, 0);
 sun.scale.setScalar(7);
 sun.castShadow = false;
 scene.add(sun);
+
+setupLighting(scene, sun); 
 
 // Initialize systems AFTER dependencies are ready
 const planetSystem = createPlanetSystem(
@@ -58,7 +61,7 @@ const planetSystem = createPlanetSystem(
   planetTextures
 );
 
-const cometSystem = createCometSystem(scene);
+const cometSystem = createCometSystem(scene, sun);
 
 // Store references AFTER planet system is created
 const planets = planetSystem.planets;
@@ -108,7 +111,11 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
+
+// Enable shadows
 renderer.shadowMap.enabled = true;
+// For softer shadows:
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 // ad controls
 const controls = new OrbitControls(camera, canvas);

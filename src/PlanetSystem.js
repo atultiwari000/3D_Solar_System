@@ -9,7 +9,7 @@ export function createPlanetSystem(scene, textureLoader, sphereGeometry, planetT
     moonTexture,
     jupiterTexture,
     saturnTexture
-   } = planetTextures;
+  } = planetTextures;
 
   const planets = [
     {
@@ -84,20 +84,20 @@ export function createPlanetSystem(scene, textureLoader, sphereGeometry, planetT
     {
       name: "Jupiter",
       radius: 4,
-      distance: 30,
+      distance: 35,
       tilt: 3.13,
-      revolutionSpeed: 0.001,
-      rotationSpeed: 0.1,
+      revolutionSpeed: 0.002,
+      rotationSpeed: 0.001,
       material: new THREE.MeshStandardMaterial({ map: jupiterTexture }),
       moons: [],
     },
     {
       name: "Saturn",
       radius: 4,
-      distance: 40,
+      distance: 50,
       tilt: 26.73,
       revolutionSpeed: 0.001,
-      rotationSpeed: 0.09,
+      rotationSpeed: 0.002,
       material: new THREE.MeshStandardMaterial({ map: saturnTexture }),
       moons: [],
     },
@@ -105,9 +105,6 @@ export function createPlanetSystem(scene, textureLoader, sphereGeometry, planetT
 
   const planetObjects = [];
 
-  // Create each planet using nested groups:
-  // - An outer group (orbitPivot) for revolution around the sun.
-  // - An inner group (planetPivot) for self‑rotation.
   planets.forEach((planet) => {
     const orbitPivot = new THREE.Object3D();
     scene.add(orbitPivot);
@@ -118,9 +115,10 @@ export function createPlanetSystem(scene, textureLoader, sphereGeometry, planetT
 
     const planetMesh = new THREE.Mesh(sphereGeometry, planet.material);
     planetMesh.scale.setScalar(planet.radius);
-    planetMesh.castShadow = true;
-    planetMesh.receiveShadow = true;
-    // Apply axial tilt (converted from degrees to radians)
+    // planetMesh.castShadow = true;
+    // planetMesh.receiveShadow = true;
+
+    // Apply axial tilt (converted from degrees to radian)
     planetMesh.rotation.z = THREE.MathUtils.degToRad(planet.tilt);
     planetPivot.add(planetMesh);
 
@@ -128,7 +126,6 @@ export function createPlanetSystem(scene, textureLoader, sphereGeometry, planetT
     planet.planetPivot = planetPivot;
     planet.planetMesh = planetMesh;
 
-    // Create moons (if any) with similar group logic
     planet.moons.forEach((moon) => {
       const moonOrbitPivot = new THREE.Object3D();
       planetPivot.add(moonOrbitPivot);
