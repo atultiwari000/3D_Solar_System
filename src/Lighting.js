@@ -1,7 +1,7 @@
 import * as THREE from "three";
 
 export function setupLighting(scene, sun) {
-  const sunLight = new THREE.PointLight(0xffffff, 5.0, 1000);
+  const sunLight = new THREE.PointLight(0xffffff, 100.0, 1000);
   sunLight.position.copy(sun.position); 
   sunLight.castShadow = true;
   
@@ -14,7 +14,7 @@ export function setupLighting(scene, sun) {
 
   const ambientLight = new THREE.AmbientLight(
     0xffffff,
-    0.5
+    0.8
   );
   scene.add(ambientLight)
 
