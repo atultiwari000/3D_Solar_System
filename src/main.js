@@ -26,6 +26,10 @@ const jupiterTexture = textureLoader.load("/textures/8k_jupiter.jpg");
 jupiterTexture.colorSpace = THREE.SRGBColorSpace;
 const saturnTexture = textureLoader.load("/textures/saturn.jpg");
 saturnTexture.colorSpace = THREE.SRGBColorSpace;
+const uranusTexture = textureLoader.load("/textures/Uranus.jpg");
+uranusTexture.colorSpace = THREE.SRGBColorSpace;
+const neptuneTexture = textureLoader.load("/textures/neptune.jpg");
+neptuneTexture.colorSpace = THREE.SRGBColorSpace;
 
 // Create planetTextures object AFTER loading textures
 const planetTextures = {
@@ -35,7 +39,9 @@ const planetTextures = {
   marsTexture,
   moonTexture,
   jupiterTexture,
-  saturnTexture
+  saturnTexture,
+  uranusTexture,
+  neptuneTexture,
 };
 
 // Initialize geometry and materials AFTER textures are loaded
